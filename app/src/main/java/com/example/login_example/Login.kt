@@ -16,6 +16,7 @@ class Login : AppCompatActivity() {
         }
 
 
+
         button2.setOnClickListener{
             var intent= Intent(this, RegisterPage::class.java )
             startActivity(intent)

@@ -9,15 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Login_example">
+
         <activity
-            android:name=".HomepageActivity"></activity>
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/Theme.Login_example.NoActionBar" />
+        <activity
+            android:name=".HomepageActivity"
+            android:theme="@style/Theme.Login_example.NoActionBar" />
         <activity
             android:name=".RegisterPage"
             android:label="@string/title_activity_register_page"
             android:theme="@style/Theme.Login_example.NoActionBar" />
         <activity
             android:name=".Login"
-            android:theme="@style/Theme.Login_example.NoActionBar" >
+            android:theme="@style/Theme.Login_example.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
