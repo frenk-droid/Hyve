@@ -23,8 +23,9 @@
         "world, without breaking the rules of physics.\n"
         "The fundamentals of light, surface, and movement are key to conveying how objects move, "
         "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
+        "seams, divides space, and indicates moving parts.\n\n" </string>
 
+    <!--
         "Bold, graphic, intentional.\n\n"
 
         "The foundational elements of print based design typography, grids, space, scale, color, "
@@ -99,7 +100,7 @@
         "On the layout level, design your app layout to minimize opportunities for interference. "
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
-    </string>
+    </string> -->
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Settings</string>
 </resources>
