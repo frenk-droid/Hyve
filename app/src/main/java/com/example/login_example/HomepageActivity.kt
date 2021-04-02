@@ -6,6 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 
 class HomepageActivity : AppCompatActivity() {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_scrolling, menu)
+        return true
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -13,9 +18,5 @@ class HomepageActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar1))
 
     }
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_scrolling, menu)
-        return true
-    }
+
 }
