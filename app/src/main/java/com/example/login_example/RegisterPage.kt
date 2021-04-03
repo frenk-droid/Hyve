@@ -1,5 +1,6 @@
 package com.example.login_example
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -9,22 +10,28 @@ import kotlinx.android.synthetic.main.activity_register_page2.*
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 class RegisterPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_page2)
 
-        // da implementare l' inserimento dell'immagine
+        // da implementare l' inserimento dell'immagine e il controllo se l'utente è già presente
 
         button3.setOnClickListener {
 
             var username = UsernameField.text.toString()
             var password = passField.text.toString()
             var email = emailField.text.toString()
+
             auth = Firebase.auth
+
+
 
             if (validateCredentials(username, password, email)) { // per ora è inutile... le credenziali sono controllate da firebase in automatico durante l'immissione dei dati, implementare questa funzione per un inserimento corrento dello username
                 Log.d("mex", "Username: ${username}, Password: ${password}, email: ${email}")
@@ -34,6 +41,11 @@ class RegisterPage : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("inserimento database", "createUserWithEmail:success")
+
+                            var database = FirebaseDatabase.getInstance().getReference("users")
+                            var user_id= database.push().key
+                            var utente = user(user_id, username, password, email)
+                            database.child(user_id!!).setValue(utente)
                             finish()
                         }
 
