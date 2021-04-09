@@ -11,10 +11,6 @@
         android:theme="@style/Theme.Login_example">
 
         <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/Theme.Login_example.NoActionBar" />
-        <activity
             android:name=".HomepageActivity"
             android:theme="@style/Theme.Login_example.NoActionBar" />
         <activity
