@@ -1,40 +1,36 @@
-package com.example.login_example
+ package com.example.login_example
 
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
-import android.provider.MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+import android.provider.MediaStore.Audio.Albums.*
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_register_page2.*
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
-import android.provider.MediaStore.Audio.Albums.*
-import android.provider.MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI
-import android.provider.MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
-import android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI
-import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import java.util.*
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import kotlinx.android.synthetic.main.activity_register_page2.*
+import java.io.ByteArrayOutputStream
+import java.util.*
 
-class RegisterPage : AppCompatActivity() {
+
+ class RegisterPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private  var random: String ?= null
 
-    var uri : Uri? = null;
+    var uri : Uri? = null
     val storage = FirebaseStorage.getInstance()
+    var filename : String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +50,24 @@ class RegisterPage : AppCompatActivity() {
 
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
+
+                        if(uri!=null){
+                            uploadImageToFirebaseStorage()
+                        }
+
                         if (task.isSuccessful) {
 
                             var database = FirebaseDatabase.getInstance().getReference("users")
-                            var user_id= database.push().key
-                            var utente = user(user_id, username, password, email)
-                            database.child(user_id!!).setValue(utente)
+                            var user_uid= auth.currentUser.uid.toString()
+
+                            var utente :user
+
+                            if(random!=null)
+                                utente = user(user_uid, username, password, email, random!!)
+                            else
+                                utente = user(user_uid, username, password, email)
+
+                            database.child(user_uid).setValue(utente)
                             finish()
                         }
 
@@ -68,11 +76,6 @@ class RegisterPage : AppCompatActivity() {
                     }
             }
 
-            if(uri!=null){
-                uploadImageToFirebaseStorage()
-
-
-            }
             else
                 Log.d("ERROR", "credenziali non valide")
         }
@@ -86,7 +89,7 @@ class RegisterPage : AppCompatActivity() {
 
     fun uploadImage(v: View?){
 
-        val intent = Intent(Intent.ACTION_PICK,  MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type= "image/*"
         startActivityForResult(intent, 0)
 
@@ -103,8 +106,9 @@ class RegisterPage : AppCompatActivity() {
 
     private fun uploadImageToFirebaseStorage() {
 
-        val filename = "images/" + UUID.randomUUID().toString()
-        val ref = storage.getReference(filename)
+        random= UUID.randomUUID().toString()
+        filename = "profile_images/${random}"
+        val ref = storage.getReference(filename!!)
         ref.putFile(uri!!)
             .addOnSuccessListener {
                 Log.d("ok", "Successfully uploaded image")
