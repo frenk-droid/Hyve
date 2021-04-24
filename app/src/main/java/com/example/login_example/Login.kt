@@ -58,7 +58,7 @@ class Login : AppCompatActivity() {
 
         button.setOnClickListener{
             auth1=Firebase.auth
-            auth1.signInWithEmailAndPassword("s@gmail.com", "Ciao12345" )
+            auth1.signInWithEmailAndPassword("i.gallo@gmail.com", "Prova123" )
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
 
@@ -98,6 +98,7 @@ class Login : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 User = dataSnapshot.getValue<user>()
                 Log.d("User value ondatachange", "${User?.image_profile}")
+                intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("USER_DATA", User)
                 startActivity(intent)
 

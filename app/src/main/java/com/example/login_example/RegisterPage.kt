@@ -68,7 +68,7 @@ import java.util.*
                                 utente = user(user_uid, username, password, email)
 
                             database.child(user_uid).setValue(utente)
-                            finish()
+
                         }
 
                         else
@@ -112,6 +112,11 @@ import java.util.*
         ref.putFile(uri!!)
             .addOnSuccessListener {
                 Log.d("ok", "Successfully uploaded image")
+
+                val intent = Intent(this, HomepageActivity::class.java)
+                intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("IMG_DATA", random)
+                startActivity(intent)
 
                 ref.downloadUrl.addOnSuccessListener {
                     Log.d("mm", "File Location: $it")

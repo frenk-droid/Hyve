@@ -36,7 +36,7 @@
 
                 <include
                     layout="@layout/fragment_scrolling"
-                    android:layout_width="405dp"
+                    android:layout_width="358dp"
                     android:layout_height="wrap_content" />
 
             </androidx.cardview.widget.CardView>
@@ -52,7 +52,7 @@
 
                 <include
                     layout="@layout/fragment_scrolling"
-                    android:layout_width="391dp"
+                    android:layout_width="456dp"
                     android:layout_height="wrap_content" />
             </androidx.cardview.widget.CardView>
 
