@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -18,7 +19,6 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.prova_download.*
 
 
@@ -36,6 +36,7 @@ class HomepageActivity : AppCompatActivity() {
     private var firebase = Firebase.database.reference
     val topic = mutableListOf<Topic>()
     private lateinit var context: Context
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -64,6 +65,7 @@ class HomepageActivity : AppCompatActivity() {
                 }
         context = this
         createTopic(context)
+
 
 
     }
@@ -106,10 +108,12 @@ class HomepageActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             if (data != null) {
                 val img= data.getStringExtra("image_path")
+                Log.d("imgkkkkkkkkkkkkkkk", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ${img.toString()}")
                 val id= data.getStringExtra("id")
                 val nome= data.getStringExtra("nome")
                 val text= data.getStringExtra("text")
-                topic.add(Topic(id!!, nome!!, img!!, text!!))
+                topic.add(Topic(id!!, nome!!, img!!, text!!, mutableListOf()))
+
                 recyclerView.adapter = ContactAdapter(context, topic)
                 recyclerView.layoutManager = LinearLayoutManager(context)
             }

@@ -1,23 +1,20 @@
 package com.example.login_example
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_contact.view.*
-import kotlinx.android.synthetic.main.prova_download.*
 
-class ContactAdapter(private val context: Context, private val topics : List<Topic>)
-    : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
-    private val TAG = "ContactAdapter"
+class ContactAdapter2(private val context: Context, private val posts : List<Post>)
+    : RecyclerView.Adapter<ContactAdapter2.ViewHolder>() {
+
+    private val TAG = "ContactAdapter2"
 
     // Usually involves inflating a layout from XML and returning the holder - THIS IS EXPENSIVE
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,22 +26,22 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
     }
 
     // Returns the total count of items in the list
-    override fun getItemCount() = topics.size
+    override fun getItemCount() = posts.size
 
     // Involves populating data into the item through holder - NOT expensive
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.i(TAG, "onBindViewHolder at position $position")
-        val topic = topics[position]
-        holder.bind(topic)
+        val post = posts[position]
+        holder.bind(post)
 
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(topic: Topic) {
+        fun bind(post:Post) {
 
-            itemView.tvText.text = topic.text
+            itemView.tvText.text = post.text
             var storage= FirebaseStorage.getInstance()
-            var imageRef = storage.getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/topic_images/${topic.image_path}")
+            var imageRef = storage.getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/post_images/${post.image_path}")
 
 
             val ONE_MEGABYTE = (1024 * 1024).toLong()
@@ -59,7 +56,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
                         exception.message?.let { Log.d("Error", it) }
                     }
             itemView.setOnClickListener {
-               val intent = Intent(itemView.context, PostActivity::class.java)
+                /*val intent = Intent(itemView.context, PostActivity::class.java)
 
                 intent.putExtra("topic_nome", topic.nome)
                 intent.putExtra("topic_image", topic.image_path)
@@ -67,7 +64,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
                 intent.putExtra("topic_text", topic.text)
                 intent.putExtra("topic_list", ArrayList(topic.posts_ids))
 
-                itemView.context.startActivity(intent)
+                itemView.context.startActivity(intent)*/  // poi si passa alla schermata dei commenti
 
             }
         }
