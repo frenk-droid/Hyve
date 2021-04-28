@@ -11,6 +11,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -46,6 +48,7 @@ class HomepageActivity : AppCompatActivity() {
         val User: user? = intent.getSerializableExtra("USER_DATA") as? user
         val img_path : String?= intent.getSerializableExtra("IMG_DATA") as? String
         Log.d("USER DATA HomePage", "${User?.username}  ${User?.email}    ${User?.password}")
+
 
         if(img_path==null)
             imageRef = storage.getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/profile_images/${User?.image_profile}")

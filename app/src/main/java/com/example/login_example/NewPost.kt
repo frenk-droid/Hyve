@@ -21,6 +21,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageTask
+import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_new_post.*
 import kotlinx.android.synthetic.main.activity_new_topic.*
 import kotlinx.android.synthetic.main.prova_download.*
@@ -35,6 +37,7 @@ class NewPost : AppCompatActivity() {
     var topicc :Topic?= null
     var passed_topic:Topic?=null
     var post : Post?=null
+    var task: StorageTask<UploadTask.TaskSnapshot>?= null
     private var firebase = Firebase.database.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +82,9 @@ class NewPost : AppCompatActivity() {
                         uploadImageToFirebaseStorage()
                     }
 
+                    Tasks.whenAll(task!!).addOnCompleteListener(OnCompleteListener { task: Task<Void?> ->
+
+
                     var post_id = UUID.randomUUID().toString()
                     post_ids.add(post_id)
                     post= Post(post_id, namePost!!, random, textPost, mutableListOf(""))
@@ -100,7 +106,7 @@ class NewPost : AppCompatActivity() {
                     //returnIntent.putExtra("post_list", ArrayList(post!!.commenti_ids)) // non serve perchè all'inizio non ci saranno mai commenti di altre persone
                     setResult(RESULT_OK, returnIntent)
                     finish()
-
+                    }  )
 
                 }
             })
@@ -137,7 +143,7 @@ class NewPost : AppCompatActivity() {
         filename = "post_images/${random}"
 
         val ref = storage.getReference(filename!!)
-         ref.putFile(uri!!)
+         task= ref.putFile(uri!!)
             .addOnSuccessListener {
                 Log.d("ok", "Successfully uploaded image")
 
