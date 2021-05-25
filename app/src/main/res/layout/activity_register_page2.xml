@@ -94,6 +94,7 @@
         android:layout_width="176dp"
         android:layout_height="56dp"
         android:layout_marginTop="74dp"
+        android:onClick="signUp"
         android:text="Register"
         app:backgroundTint="#454545"
         app:layout_constraintBottom_toBottomOf="parent"

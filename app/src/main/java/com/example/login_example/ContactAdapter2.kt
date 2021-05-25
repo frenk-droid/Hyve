@@ -13,26 +13,14 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_contact.view.*
 
 
-class ContactAdapter2(private val context: Context, private val posts : List<Post>)
-    : RecyclerView.Adapter<ContactAdapter2.ViewHolder>() {
+class ContactAdapter2(private val context: Context, private val posts : List<Post>) : RecyclerView.Adapter<ContactAdapter2.ViewHolder>() {
 
-    private val TAG = "ContactAdapter2"
-
-    // Usually involves inflating a layout from XML and returning the holder - THIS IS EXPENSIVE
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.i(TAG, "onCreateViewHolder")
-        println("okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkokkokkokokokokokkkooooooooo")
-
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false))
-
     }
-
-    // Returns the total count of items in the list
     override fun getItemCount() = posts.size
 
-    // Involves populating data into the item through holder - NOT expensive
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.i(TAG, "onBindViewHolder at position $position")
         val post = posts[position]
         holder.bind(post)
 
@@ -40,34 +28,20 @@ class ContactAdapter2(private val context: Context, private val posts : List<Pos
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(post:Post) {
-
             itemView.tvText.text = post.text
-            var storage= FirebaseStorage.getInstance()
-            var imageRef = storage.getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/post_images/${post.image_path}")
-
-
             val ONE_MEGABYTE = (1024 * 1024).toLong()
-            imageRef.getBytes(ONE_MEGABYTE)
+            FirebaseStorage.getInstance().getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/post_images/${post.image_path}").getBytes(ONE_MEGABYTE)
                     .addOnSuccessListener { bytes ->
                         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                         itemView.ivProfile.setImageBitmap(bmp)
-
                     }
                     .addOnFailureListener { exception ->
-
                         exception.message?.let { Log.d("Error", it) }
                     }
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, CommentsActivity::class.java)
-
-                intent.putExtra("post_nome", post.nome)
-                intent.putExtra("post_image", post.image_path)
-                intent.putExtra("post_id", post.id)
-                intent.putExtra("post_text", post.text)
-                intent.putExtra("commenti_list", ArrayList(post.commenti_ids))
-
-                itemView.context.startActivity(intent)  // poi si passa alla schermata dei commenti
-
+                intent.putExtra("post-data", post)
+                itemView.context.startActivity(intent)
             }
         }
     }

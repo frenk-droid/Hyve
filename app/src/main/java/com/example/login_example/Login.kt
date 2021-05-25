@@ -4,8 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import com.google.firebase.FirebaseError
+import androidx.core.content.ContextCompat.startActivity
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -15,100 +17,69 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_register_page2.*
-import kotlinx.coroutines.NonCancellable.children
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+
+import kotlinx.coroutines.withContext
 
 //inserire sottolineature rosse per identificare se email o password è errata
-
+//controllare eventuali bug
 class Login : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var auth1: FirebaseAuth
-    private var firebase= Firebase.database.reference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
 
-        buttonLogin.setOnClickListener{
+    fun register(v:View?){
+        var intent= Intent(this, RegisterPage::class.java )
+        startActivity(intent)
+    }
 
-            val password = editTextTextPassword.text.toString()
-            val email = editTextTextPersonName2.text.toString()
-            auth= Firebase.auth
-            val uid= auth.uid.toString()
+   fun Login(v:View?) { //check if the user is already in firebase and then call the function loadhomePage
 
+        val password = editTextTextPassword.text.toString()
+        val email = editTextTextPersonName2.text.toString()
+        val auth= Firebase.auth
+        val uid= auth.uid.toString()
 
-            auth.signInWithEmailAndPassword(email, password)
-
+        auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    println("STArt3")
                     if (task.isSuccessful) {
-                        println("STArt4")
-
-                        var intent = Intent( this, MainActivity2::class.java)
+                        var intent = Intent( this, HomepageActivity::class.java)
                         loadhomePage(intent, uid)
-
                     }
-
-                    else {
+                    else
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                        println("STArt5")
-                    }
                 }
-        }
-
-        button.setOnClickListener{
-            auth1=Firebase.auth
-            auth1.signInWithEmailAndPassword("i.gallo@gmail.com", "Prova123" )
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-
-                        //val user = auth.currentUser
-                        var intent1 = Intent( this, MainActivity2::class.java)
-                        startActivity(intent1)
-                    }
-
-                    else {
-                        Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
-
-        button2.setOnClickListener{
-            var intent= Intent(this, RegisterPage::class.java )
-            startActivity(intent)
-        }
+       loadhomePage(intent, uid)
+       }
 
 
 
 
-        }
+    private fun loadhomePage(intent :Intent, uid: String) {  //download all the user data from firebase and pass them to HomepageActivity
 
+        lateinit var User :user
+        //var intent = Intent( this, HomepageActivity::class.java)
 
-    private fun loadhomePage ( intent :Intent, uid: String) : user? { // bug: se si torna indietro dopo il login l'uid non viene aggiornato e viene caricata l'immagine del profilo precedente
-
-        var User :user ?= null
-        val rootRef = firebase.child("users").child(uid)
-
-
-        rootRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                println(error.message)
-            }
-
+        Firebase.database.reference.child("users").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                User = dataSnapshot.getValue<user>()
-                Log.d("User value ondatachange", "${User?.image_profile}")
+                User = dataSnapshot.getValue<user>()!!
                 intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("USER_DATA", User)
                 startActivity(intent)
+            }
 
-                
-        } } )
-
-        Log.d("User value", "${User?.image_profile}")
-        return User
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(baseContext, "Error.", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
+
 
 
 }

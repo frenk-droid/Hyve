@@ -24,60 +24,33 @@ import java.lang.reflect.Array
 
 class PostActivity : AppCompatActivity() {
 
-    var topic: Topic? = null
-    var ids= mutableListOf<String>()
-    var post = mutableListOf<Post>()
+    private lateinit var topic: Topic
+    val context = this
     val posts_finale= mutableListOf<Post>()
-    var context: Context? = null
-    private var firebase = Firebase.database.reference
-    private var firebase1 = Firebase.database.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
+        topic= intent.getSerializableExtra("topic-data") as Topic
 
-        val name: String? = intent.getSerializableExtra("topic_nome") as? String
-        val img_path: String? = intent.getSerializableExtra("topic_image") as? String
-
-        val topic_id: String? = intent.getSerializableExtra("topic_id") as? String
-        val topic_text: String? = intent.getSerializableExtra("topic_text") as? String
-        val topic_list = intent.getParcelableArrayListExtra<Parcelable>("topic_list") as ArrayList<String>
-        topic = Topic(topic_id!!, name!!, img_path!!, topic_text!!, topic_list)
-        context = this
-        Log.d("Topic values", topic.toString())
-
-        var storage = FirebaseStorage.getInstance()
-        var imageRef = storage.getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/topic_images/${img_path}")
-
-
+        var imageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/topic_images/${topic.image_path}")
         val ONE_MEGABYTE = (1024 * 1024).toLong()
         imageRef.getBytes(ONE_MEGABYTE)
                 .addOnSuccessListener { bytes ->
                     val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     imageView4.setImageBitmap(bmp)
-
                 }
                 .addOnFailureListener { exception ->
-
                     exception.message?.let { Log.d("Error", it) }
                 }
-        Log.d("topics_list", topic_list.toString())
-    postListCreate(topic_list, this)
-
+        postListCreate(topic.posts_ids, this)
     }
 
     fun addTopic(v: View?) {
-
         val intent = Intent(this, NewPost::class.java)
-        intent.putExtra("topic_nome", topic!!.nome)
-        intent.putExtra("topic_image", topic!!.image_path)
-        intent.putExtra("topic_id", topic!!.id)
-        intent.putExtra("topic_text", topic!!.text)
-        intent.putExtra("topic_list", ArrayList(topic!!.posts_ids))
+        intent.putExtra("topic-data", topic)
         startActivityForResult(intent, 2)
-//startActivity(intent)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -87,7 +60,6 @@ class PostActivity : AppCompatActivity() {
                 val id = data.getStringExtra("id")
                 val nome = data.getStringExtra("nome")
                 val text = data.getStringExtra("text")
-               // val list = intent.getParcelableArrayListExtra<Parcelable>("post_list") as java.util.ArrayList<String>
                 posts_finale.add(Post(id!!, nome!!, img!!, text!!, mutableListOf("")))
 
                 r.adapter = ContactAdapter2(context!!, posts_finale)
@@ -97,60 +69,26 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
-   /* private fun createTopic(context: Context) { // ora va bene solo per uno ma è da modificare
-
-
-        firebase.child("topics").addListenerForSingleValueEvent(object : ValueEventListener {
+    private  fun postListCreate(ids: List<String>, context: Context) {
+        Firebase.database.reference.child("posts").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 println(error.message)
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                var posts= mutableListOf<Post>()
                 for (data in snapshot.getChildren())
-                    for (pino in data.getValue<Topic>()!!.posts_ids)
-                        ids.add(pino)
-                postListCreate(ids, context)
+                    posts.add(data.getValue<Post>()!!)
+                Log.d("post", posts.toString())
 
-                /* recyclerView.adapter = ContactAdapter2(context, post)
-                recyclerView.layoutManager = LinearLayoutManager(context)*/
-
-
-            }*/
-
-          private  fun postListCreate(ids: List<String>, context: Context) {
-                firebase.child("posts").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        println(error.message)
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        var posts= mutableListOf<Post>()
-
-
-                        for (data in snapshot.getChildren())
-                            posts.add(data.getValue<Post>()!!)
-                        Log.d("post", posts.toString())
-
-                         for(post in posts){
-
-                             if(ids.contains(post.id))
-                                 posts_finale.add(post)
-
-                             }
-                        Log.d("post_finale", posts_finale.toString())
-                        Log.d("ids", ids.toString())
-
-                        r.adapter = ContactAdapter2(context, posts_finale) //se posts_finale è null c'è un problema
-                        r.layoutManager = LinearLayoutManager(context)
-
-
-                    }
-
-                })
+                for(post in posts)
+                    if(ids.contains(post.id))
+                        posts_finale.add(post)
+                r.adapter = ContactAdapter2(context, posts_finale) //se posts_finale è null c'è un problema
+                r.layoutManager = LinearLayoutManager(context)
             }
-       // })
-   // }
+        })
+    }
 }
 
 
