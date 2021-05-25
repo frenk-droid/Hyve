@@ -11,21 +11,10 @@ import kotlinx.android.synthetic.main.fragment_homepage.*
 import kotlinx.android.synthetic.main.fragment_homepage.view.*
 
 
-class HomepageFragment : Fragment() {
+class HomepageFragment : Fragment(R.layout.fragment_homepage) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        val view =  inflater.inflate(R.layout.fragment_homepage, container, false)
-
-        view.textView7.setOnClickListener { Navigation.findNavController(view).navigate(R.id.action_homepageFragment_to_homepage2) }
-
-        return view
 
     }
 

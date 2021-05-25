@@ -21,6 +21,7 @@ import kotlinx.coroutines.NonCancellable.children
 //inserire sottolineature rosse per identificare se email o password è errata
 
 class Login : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
     private lateinit var auth1: FirebaseAuth
     private var firebase= Firebase.database.reference
@@ -44,7 +45,7 @@ class Login : AppCompatActivity() {
                     if (task.isSuccessful) {
                         println("STArt4")
 
-                        var intent = Intent( this, HomepageActivity::class.java)
+                        var intent = Intent( this, MainActivity2::class.java)
                         loadhomePage(intent, uid)
 
                     }
@@ -63,7 +64,7 @@ class Login : AppCompatActivity() {
                     if (task.isSuccessful) {
 
                         //val user = auth.currentUser
-                        var intent1 = Intent( this, HomepageActivity::class.java)
+                        var intent1 = Intent( this, MainActivity2::class.java)
                         startActivity(intent1)
                     }
 
