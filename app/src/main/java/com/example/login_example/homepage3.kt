@@ -10,7 +10,6 @@ class homepage3 : Fragment(R.layout.fragment_homepage3) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
 }

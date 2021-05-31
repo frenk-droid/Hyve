@@ -103,4 +103,5 @@
     </string> -->
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="g">g</string>
 </resources>

@@ -25,9 +25,9 @@ import kotlinx.coroutines.withContext
 
 //inserire sottolineature rosse per identificare se email o password è errata
 //controllare eventuali bug
+//todo controllo che campi non devono essere null se no l'app crasha
+
 class Login : AppCompatActivity() {
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,22 +49,18 @@ class Login : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        var intent = Intent( this, HomepageActivity::class.java)
+                        var intent = Intent( this, MainActivity2::class.java)
                         loadhomePage(intent, uid)
                     }
                     else
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
-       loadhomePage(intent, uid)
+      // loadhomePage(intent, uid)
        }
-
-
-
 
     private fun loadhomePage(intent :Intent, uid: String) {  //download all the user data from firebase and pass them to HomepageActivity
 
         lateinit var User :user
-        //var intent = Intent( this, HomepageActivity::class.java)
 
         Firebase.database.reference.child("users").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -79,7 +75,4 @@ class Login : AppCompatActivity() {
             }
         })
     }
-
-
-
 }
