@@ -31,6 +31,7 @@ class MainActivity2 : AppCompatActivity() {
         val firstFragment=HomepageFragment()
         val secondFragment=homepage2()
         val thirdFragment=homepage3()
+        val settingFragment=settings()
 
 
 
