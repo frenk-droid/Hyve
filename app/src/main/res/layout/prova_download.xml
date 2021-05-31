@@ -28,14 +28,4 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         app:layout_constraintVertical_bias="0.469" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="newTopic"
-        android:text="New Topic"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
