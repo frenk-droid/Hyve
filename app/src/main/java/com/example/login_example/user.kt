@@ -8,6 +8,7 @@ class user : Serializable {
     var password=""
     var email= ""
     var user_id: String? = ""
+    val topic_ids: MutableList<String> = mutableListOf()
     var image_profile= "default.png"
 
     constructor(){}

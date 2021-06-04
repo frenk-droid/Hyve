@@ -64,7 +64,7 @@ class NewPost : AppCompatActivity() {
                     var post_id = UUID.randomUUID().toString()
                     val returnIntent = Intent()
                     post_ids.add(post_id)
-                    val post= Post(post_id, namePost, random, textPost, mutableListOf(""))
+                    /*val post= Post(post_id, namePost, random, textPost, mutableListOf(""))
                     Firebase.database.reference.database.getReference("posts").child(post_id).setValue(post)
                     val newData= Topic(topicc.id, topicc.nome, topicc.image_path, topicc.text, post_ids)
                     Firebase.database.reference.database.getReference("topics").child(topicc.id).setValue(newData)
@@ -73,7 +73,7 @@ class NewPost : AppCompatActivity() {
                     returnIntent.putExtra("id", post.id)
                     returnIntent.putExtra("text",post.text)
                     setResult(RESULT_OK, returnIntent)
-                    finish()
+                    finish()*/
                 }  )
 
             }

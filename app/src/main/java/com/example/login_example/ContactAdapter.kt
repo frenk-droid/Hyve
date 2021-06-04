@@ -8,13 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.item_contact.view.*
 import kotlinx.android.synthetic.main.prova_download.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ContactAdapter(private val context: Context, private val topics : List<Topic>) : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+class ContactAdapter(private val context: Context, private val topics : List<Topic>, private val User:user) : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false))
@@ -30,21 +41,17 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(topic: Topic) {
             itemView.tvText.text = topic.text
-            var imageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hyve-d0e7b.appspot.com/topic_images/${topic.image_path}")
-
-            val ONE_MEGABYTE = (1024 * 1024).toLong()
-            imageRef.getBytes(ONE_MEGABYTE)
-                    .addOnSuccessListener { bytes ->
-                        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                        itemView.ivProfile.setImageBitmap(bmp)
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    itemView.ivProfile.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/topic_images/${topic.image_path}"))
+                }
+            }
+            itemView.button.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main) {
+                        FirebaseHelper().addTopic(User, topic)
                     }
-                    .addOnFailureListener { exception ->
-                        exception.message?.let { Log.d("Error", it) }
-                    }
-            itemView.setOnClickListener {
-               val intent = Intent(itemView.context, PostActivity::class.java)
-               intent.putExtra("topic-data", topic)
-               itemView.context.startActivity(intent)
+                }
             }
         }
     }

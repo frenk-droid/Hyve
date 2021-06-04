@@ -60,7 +60,7 @@ class PostActivity : AppCompatActivity() {
                 val id = data.getStringExtra("id")
                 val nome = data.getStringExtra("nome")
                 val text = data.getStringExtra("text")
-                posts_finale.add(Post(id!!, nome!!, img!!, text!!, mutableListOf("")))
+               /// posts_finale.add(Post(id!!, nome!!, img!!, text!!, mutableListOf("")))
 
                 r.adapter = ContactAdapter2(context!!, posts_finale)
                 r.layoutManager = LinearLayoutManager(context)

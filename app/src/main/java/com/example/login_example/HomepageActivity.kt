@@ -59,7 +59,7 @@ class HomepageActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (data in snapshot.getChildren())
                     topic.add(data.getValue<Topic>()!!)
-                recyclerView.adapter = ContactAdapter(context, topic)
+              //  recyclerView.adapter = ContactAdapter(context, topic)
                 recyclerView.layoutManager = LinearLayoutManager(context)
             }
         })
@@ -78,7 +78,7 @@ class HomepageActivity : AppCompatActivity() {
             val nome= data.getStringExtra("nome")
             val text= data.getStringExtra("text")
             topic.add(Topic(id!!, nome!!, img!!, text!!, mutableListOf()))
-            recyclerView.adapter = ContactAdapter(context, topic)
+           // recyclerView.adapter = ContactAdapter(context, topic)
             recyclerView.layoutManager = LinearLayoutManager(context)
         }
     }

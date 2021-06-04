@@ -21,12 +21,18 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_register_page2.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
  class RegisterPage : AppCompatActivity() {
      private var auth= Firebase.auth
-     private var random: String? = null
+     val topic = mutableListOf<Topic>()
+
      var uri: Uri? = null
      var ready=false
 
@@ -36,28 +42,27 @@ import java.util.*
      }
 
      fun signUp(v: View?) {
-         var username = UsernameField.text.toString()
-         var password = passField.text.toString()
-         var email = emailField.text.toString()
+         val username = UsernameField.text.toString()
+         val password = passField.text.toString()
+         val email = emailField.text.toString()
+          var random: String?=null
          if(validateCredentials(username,password,email)) {
              auth.createUserWithEmailAndPassword(email, password)
                      .addOnCompleteListener(this) { task ->
-                         if (uri != null)
-                             uploadImageToFirebaseStorage()
-                         else
-                             ready= true
-                       while(!ready){}
-                         if (task.isSuccessful) {
-                             var user_uid = auth.currentUser.uid.toString()
-                             var utente: user
-                             if (random != null)
-                                 utente = user(user_uid, username, password, email, random!!)
-                             else
-                                 utente = user(user_uid, username, password, email)
-                             FirebaseDatabase.getInstance().getReference("users").child(user_uid).setValue(utente)
-                             loadLoginPage()
-                         } else
-                             Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show()
+                         CoroutineScope(Dispatchers.IO).launch {
+                             withContext(Dispatchers.Main) {
+                                 if (uri != null)
+                                     random= uploadImageToFirebaseStorage()
+                                 val user_uid = auth.currentUser!!.uid.toString()
+                                 val utente: user
+                                 if (random != null)
+                                     utente = user(user_uid, username, password, email, random!!)
+                                 else
+                                     utente = user(user_uid, username, password, email)
+                                 FirebaseDatabase.getInstance().getReference("users").child(user_uid).setValue(utente)
+                                 loadLoginPage()
+                             }
+                         }
                      }
          }
          else
@@ -82,12 +87,12 @@ import java.util.*
          }
      }
 
-     private fun uploadImageToFirebaseStorage() {
+     suspend fun uploadImageToFirebaseStorage():String {
 
-         random = UUID.randomUUID().toString()
+         val random = UUID.randomUUID().toString()
          val filename = "profile_images/${random}"
          val ref = FirebaseStorage.getInstance().getReference(filename)
-         val task= ref.putFile(uri!!)
+         ref.putFile(uri!!)
                  .addOnSuccessListener {
                      Log.d("ok", "Successfully uploaded image")
                      ref.downloadUrl.addOnSuccessListener {
@@ -97,9 +102,8 @@ import java.util.*
                  .addOnFailureListener {
                      Log.d("no", "Failed to upload image to storage")
                  }
-         Tasks.whenAll(task).addOnCompleteListener(OnCompleteListener { task: Task<Void?> ->
-             ready= false
-         })
+                 .await()
+            return random
      }
 
      private fun loadLoginPage(){

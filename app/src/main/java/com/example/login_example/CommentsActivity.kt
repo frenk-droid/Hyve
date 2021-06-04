@@ -86,8 +86,8 @@ class CommentsActivity : AppCompatActivity() {
 
                 firebase.database.getReference("comments").child(comment_id).setValue(comment)
                 comment_ids.add(comment_id)
-                val newData= Post(post.id, post.nome, post.image_path, post.text, comment_ids)
-                firebase.database.getReference("posts").child(post.id).setValue(newData)
+              //  val newData= Post(post.id, post.nome, post.image_path, post.text, comment_ids)
+              //  firebase.database.getReference("posts").child(post.id).setValue(newData)
                 commenti_finale.add(comment)
                 r1.adapter = ContactAdapter3(context, commenti_finale)
                 r1.layoutManager = LinearLayoutManager(context)
