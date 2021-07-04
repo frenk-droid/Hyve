@@ -9,75 +9,66 @@
     android:background="@color/black_800">
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView6"
         android:layout_width="124dp"
         android:layout_height="98dp"
         android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        tools:layout_editor_absoluteX="35dp"
-        tools:layout_editor_absoluteY="40dp" />
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
 
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="16dp"
         android:text="@string/username"
         android:textColor="@color/white_100"
-        tools:layout_editor_absoluteX="204dp"
-        tools:layout_editor_absoluteY="54dp" />
-
+        android:textSize="25dp"
+        app:layout_constraintStart_toEndOf="@+id/imageView6"
+        app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
     <TextView
         android:id="@+id/bio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
         android:text="@string/description"
         android:textColor="@color/white_100"
-        tools:layout_editor_absoluteX="204dp"
-        tools:layout_editor_absoluteY="93dp" />
-
-    <ScrollView
-        android:layout_width="410dp"
-        android:layout_height="446dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="283dp"
-        android:background="@color/black_500">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/textViewPostHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="60dp"
         android:text="Post History"
         android:textColor="@color/white_100"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="211dp" />
+        app:layout_constraintStart_toStartOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
-    <TextView
-        android:id="@+id/textViewCommentHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="108dp"
-        android:textColor="@color/white_100"
-        android:text="Comment History"
-        app:layout_constraintStart_toEndOf="@+id/textViewPostHistory"
-        app:layout_constraintTop_toTopOf="@+id/textViewPostHistory" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="com.example.login_example.ScrollingFragment"
-        android:layout_width="410dp"
-        android:layout_height="431dp"
-        android:layout_marginTop="40dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="342dp"
+        android:layout_height="392dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPostHistory" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewPostHistory"
+        app:layout_constraintVertical_bias="0.191" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
