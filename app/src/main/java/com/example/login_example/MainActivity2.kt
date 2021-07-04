@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Button
+import androidx.appcompat.view.menu.MenuView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -35,6 +38,8 @@ class MainActivity2 : AppCompatActivity() {
 
 
 
+
+
         setCurrentFragment(firstFragment)
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
@@ -48,6 +53,7 @@ class MainActivity2 : AppCompatActivity() {
         }
 
 
+
     }
 
     private fun setCurrentFragment(fragment: Fragment)=
@@ -56,8 +62,9 @@ class MainActivity2 : AppCompatActivity() {
             commit()
         }
 
+
     fun get():user{
         return User!!
     }
 
-    }
+}
