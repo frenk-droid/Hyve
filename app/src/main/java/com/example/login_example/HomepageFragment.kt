@@ -56,6 +56,7 @@ class HomepageFragment : Fragment(R.layout.activity_post) {
         }
         newTopic.setOnClickListener {
             val intent = Intent(activity, NewPost::class.java)
+            intent.putExtra("user-data", User)
             startActivity(intent)
         }
     }

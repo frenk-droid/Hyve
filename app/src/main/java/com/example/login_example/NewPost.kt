@@ -25,28 +25,65 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_new_post.*
 import kotlinx.android.synthetic.main.activity_new_topic.*
+import kotlinx.android.synthetic.main.activity_register_page2.*
 import kotlinx.android.synthetic.main.prova_download.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class NewPost : AppCompatActivity() {
     private lateinit var task: StorageTask<UploadTask.TaskSnapshot>
     private lateinit var random: String;
     private lateinit var topicc: Topic
+    private lateinit var User:user
     var uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_post)
+         User = intent.getSerializableExtra("user-data") as user
     }
 
     fun uploadPost(v:View?) {
-        val commentPost = editTextTextPersonName5.text.toString()
-        val namePost = editTextTextPersonName3.text.toString()
-        val topicPost = editTextTextPersonName4.text.toString()
-        val topics = mutableListOf<Topic>()
-        val post_ids = mutableListOf<String>()
+        random= UUID.randomUUID().toString()
+        var task= FirebaseStorage.getInstance().getReference("topic_images/${random}").putFile(uri!!)
+                .addOnSuccessListener {
+                    Log.d("Yes", "Image Uploaded")
+                }
+                .addOnFailureListener {
+                    Log.d("no", "Failed to upload image to storage")
+                }
+        Tasks.whenAll(task).addOnCompleteListener(OnCompleteListener { task: Task<Void?> ->
+            val commentPost = editTextTextPersonName5.text.toString()
+            val namePost = editTextTextPersonName3.text.toString()
+            val topicPost = editTextTextPersonName4.text.toString()
+            val post_id = UUID.randomUUID().toString()
 
+            val post = Post(post_id, namePost, random, commentPost, mutableListOf(), User.username, User.image_profile)
+            var helper = FirebaseHelper()
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    helper.addPost(post, topicPost)
+                }
+            }
 
+        })
+    }
+
+    fun uploadImage(v: View?) {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        startActivityForResult(intent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && data != null && resultCode == Activity.RESULT_OK) {
+            uri = data.data
+            imageButton3.setImageURI(uri)
+        }
     }
 
 }
