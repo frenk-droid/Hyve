@@ -10,7 +10,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/homeContainer"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="410dp"
         android:layout_height="676dp"
         android:layout_marginEnd="1dp"
@@ -19,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph">
+       >
 
     </androidx.fragment.app.FragmentContainerView>
 

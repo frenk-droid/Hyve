@@ -13,12 +13,34 @@
         android:id="@+id/editTextTextPersonName3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/roundedittext"
         android:ems="10"
         android:inputType="textPersonName"
+        android:padding="16dp"
         android:text="Name"
-        android:textColor="@color/white_100"
+        android:textColor="@color/white_100" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/roundedittext"
-        android:padding="16dp"/>
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:text="Topic"
+        android:textColor="@color/white_100" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundedittext"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:text="Comment"
+        android:textColor="@color/white_100" />
 
     <ImageButton
         android:id="@+id/imageButton3"
@@ -30,12 +52,12 @@
 
     <Button
         android:id="@+id/button7"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/roundcustombtn"
         android:onClick="uploadPost"
         android:text="@string/add"
-        android:textColor="@color/white_100"/>
+        android:textColor="@color/white_100" />
 
 </LinearLayout>

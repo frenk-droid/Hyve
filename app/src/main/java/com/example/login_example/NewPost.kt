@@ -40,73 +40,16 @@ class NewPost : AppCompatActivity() {
     }
 
     fun uploadPost(v:View?) {
-        val textPost = "Provaaaa"
+        val commentPost = editTextTextPersonName5.text.toString()
         val namePost = editTextTextPersonName3.text.toString()
-        var topics = mutableListOf<Topic>()
-        var post_ids= mutableListOf<String>()
-        val passed_topic =  intent.getSerializableExtra("topic-data") as Topic
+        val topicPost = editTextTextPersonName4.text.toString()
+        val topics = mutableListOf<Topic>()
+        val post_ids = mutableListOf<String>()
 
-        Firebase.database.reference.child("topics").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                println(error.message)
-            }
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (data in snapshot.children)
-                    topics.add(data.getValue<Topic>()!!)
-                for(topic in topics)
-                    if (topic.nome.equals(passed_topic.nome)) {
-                        post_ids.addAll(topic.posts_ids)
-                        topicc = topic
-                    }
-                if (uri != null)
-                    uploadImageToFirebaseStorage()
-                Tasks.whenAll(task).addOnCompleteListener(OnCompleteListener { task: Task<Void?> ->
-                    var post_id = UUID.randomUUID().toString()
-                    val returnIntent = Intent()
-                    post_ids.add(post_id)
-                    /*val post= Post(post_id, namePost, random, textPost, mutableListOf(""))
-                    Firebase.database.reference.database.getReference("posts").child(post_id).setValue(post)
-                    val newData= Topic(topicc.id, topicc.nome, topicc.image_path, topicc.text, post_ids)
-                    Firebase.database.reference.database.getReference("topics").child(topicc.id).setValue(newData)
-                    returnIntent.putExtra("image_path", post.image_path)
-                    returnIntent.putExtra("nome", post.nome)
-                    returnIntent.putExtra("id", post.id)
-                    returnIntent.putExtra("text",post.text)
-                    setResult(RESULT_OK, returnIntent)
-                    finish()*/
-                }  )
 
-            }
-        })
     }
 
-    fun uploadImage3(v: View?) {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "image/*"
-        startActivityForResult(intent, 4)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 4 && data != null && resultCode == Activity.RESULT_OK) {
-            uri = data.data
-            imageButton3.setImageURI(uri)
-        }
-    }
-
-    private fun uploadImageToFirebaseStorage() {
-        random = UUID.randomUUID().toString()
-        val filename = "post_images/${random}"
-        task= FirebaseStorage.getInstance().getReference(filename).putFile(uri!!)
-            .addOnSuccessListener {
-                Log.d("Yes", "Success to upload image to storage")
-            }
-            .addOnFailureListener {
-                Log.d("no", "Failed to upload image to storage")
-            }
-        }
-    }
-
+}
 
 
 

@@ -1,5 +1,6 @@
 package com.example.login_example
 
+import HomepageFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -31,8 +32,8 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_homepage)
         User = intent.getSerializableExtra("USER_DATA") as user
         Log.d("User", User!!.image_profile)
-        val firstFragment=HomepageFragment()
-        val secondFragment=homepage2()
+        val firstFragment= homepage2()
+        val secondFragment=HomepageFragment()
         val thirdFragment=homepage3()
         val settingFragment=settings()
 
