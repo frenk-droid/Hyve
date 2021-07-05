@@ -55,6 +55,27 @@ class FirebaseHelper {
         Firebase.database.reference.database.getReference("users").child(User.user_id!!).setValue(utente)
     }
 
+    suspend fun addPost(post: Post, topic: String){
+        var posts=mutableListOf<String>()
+        var list= mutableListOf<String>()
+         var topic_id:Topic?=null
+        Firebase.database.reference.database.getReference("posts").child(post.id).setValue(post)
+        for(t in Firebase.database.reference.child("topics").getSnapshotValue().children){
+
+            if(t.getValue<Topic>()!!.nome == topic){
+                println("fiiiiiiiiiiind")
+                posts.addAll(t.getValue<Topic>()!!.posts_ids)
+                topic_id= t.getValue<Topic>()!!
+
+            }
+
+        }
+        topic_id!!.posts_ids.add(post.id)
+        println(topic_id!!.posts_ids)
+        Firebase.database.reference.database.getReference("topics").child(topic_id!!.id).setValue(topic_id)
+
+    }
+
     suspend fun getImage(reference:String):Bitmap{
         var bmp: Bitmap?=null
         val ONE_MEGABYTE = (1024 * 1024).toLong()

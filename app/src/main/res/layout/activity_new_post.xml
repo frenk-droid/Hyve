@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="387dp"
         android:layout_gravity="center"
-        android:onClick="uploadImage3"
+        android:onClick="uploadImage"
         tools:src="@tools:sample/avatars" />
 
     <Button
