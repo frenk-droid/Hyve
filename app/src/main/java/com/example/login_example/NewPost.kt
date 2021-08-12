@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -31,24 +32,28 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import java.util.*
 
 class NewPost : AppCompatActivity() {
     private lateinit var task: StorageTask<UploadTask.TaskSnapshot>
     private lateinit var random: String;
     private lateinit var topicc: Topic
-    private lateinit var User:user
+    private lateinit var User: user
     var uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_post)
-         User = intent.getSerializableExtra("user-data") as user
+        User = intent.getSerializableExtra("user-data") as user
     }
 
-    fun uploadPost(v:View?) {
-        random= UUID.randomUUID().toString()
-        var task= FirebaseStorage.getInstance().getReference("topic_images/${random}").putFile(uri!!)
+    fun uploadPost(v: View?) {
+        random = UUID.randomUUID().toString()
+        var task =
+            FirebaseStorage.getInstance().getReference("topic_images/${random}").putFile(uri!!)
                 .addOnSuccessListener {
                     Log.d("Yes", "Image Uploaded")
                 }
@@ -61,7 +66,15 @@ class NewPost : AppCompatActivity() {
             val topicPost = editTextTextPersonName4.text.toString()
             val post_id = UUID.randomUUID().toString()
 
-            val post = Post(post_id, namePost, random, commentPost, mutableListOf(), User.username, User.image_profile)
+            val post = Post(
+                post_id,
+                namePost,
+                random,
+                commentPost,
+                mutableListOf(),
+                User.username,
+                User.image_profile
+            )
             var helper = FirebaseHelper()
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
@@ -85,6 +98,43 @@ class NewPost : AppCompatActivity() {
             imageButton3.setImageURI(uri)
         }
     }
+
+    lateinit var list: List<Topic>
+    fun getTopics() {
+        var helper = FirebaseHelper()
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                var list = helper.getTopic()
+
+            }
+        }
+
+    }
+
+    val spinner = findViewById<Spinner>(R.id.topic_spinner)
+    val dataAdapter = ArrayAdapter(
+        this,
+        android.R.layout.simple_spinner_item,
+        list).also { adapter ->
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+    }
+
+    spinner.onItemSelectedListener = object :
+        AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>,
+                                    view: View, position: Int, id: Long) {
+            Toast.makeText(this@MainActivity,
+                getString(R.string.selected_item) + " " +
+                        "" + languages[position], Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>) {
+            // write code to perform some action
+
+     x
+
+
 
 }
 
