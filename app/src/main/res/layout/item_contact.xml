@@ -2,55 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="@color/black_700">
+    android:background="@color/black_700"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/ivProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/titolo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:layout_marginLeft="8dp">
+        android:layout_height="wrap_content"
+        android:text="TITOLO"
+        android:textColor="@color/red_100"
+        android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/tvText"
-            android:text="TvText"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Topic"
+        android:layout_marginTop="16dp"
+        android:textColor="#FFFFFF" />
+
+        <ImageView
+            android:id="@+id/imageView8"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="5"
-            android:maxLines="5"
-            android:textSize="18sp"
-            android:textColor="@color/white_100"/>
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            tools:srcCompat="@tools:sample/avatars" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:onClick="follow"
-            android:text="@string/follow"
-            android:background="@drawable/roundcustombtn"
-            android:textColor="@color/white_100" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Segui"
+        android:background="@drawable/roundcustombtn"
+       />
 
-    </LinearLayout>
-
-
-
-
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Non seguire piu'"
+        android:visibility="gone"
+        android:background="@drawable/roundcustombtn"
+        />
 
 
 </LinearLayout>

@@ -6,16 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
-import android.widget.Button
-import androidx.appcompat.view.menu.MenuView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_homepage.*
-import java.lang.reflect.Array.newInstance
+
 
 
 class MainActivity2 : AppCompatActivity() {
@@ -35,7 +28,6 @@ class MainActivity2 : AppCompatActivity() {
         val firstFragment= homepage2()
         val secondFragment=HomepageFragment()
         val thirdFragment=homepage3()
-        val settingFragment=settings()
 
 
 
@@ -45,8 +37,8 @@ class MainActivity2 : AppCompatActivity() {
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.home->setCurrentFragment(firstFragment)
-                R.id.topic->setCurrentFragment(secondFragment)
+                R.id.home->setCurrentFragment(secondFragment)
+                R.id.topic->setCurrentFragment(firstFragment)
                 R.id.profile->setCurrentFragment(thirdFragment)
 
             }

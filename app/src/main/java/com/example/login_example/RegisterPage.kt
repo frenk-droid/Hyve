@@ -11,13 +11,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_register_page2.*
@@ -53,7 +48,7 @@ import java.util.*
                              withContext(Dispatchers.Main) {
                                  if (uri != null)
                                      random= uploadImageToFirebaseStorage()
-                                 val user_uid = auth.currentUser!!.uid.toString()
+                                 val user_uid = auth.currentUser!!.uid
                                  val utente: user
                                  if (random != null)
                                      utente = user(user_uid, username, password, email, random!!)
@@ -86,7 +81,7 @@ import java.util.*
              imageButton.setImageURI(uri)
          }
      }
-
+    //todo spostare funzione su firebasehelper e controllare che non sia già presente
      suspend fun uploadImageToFirebaseStorage():String {
 
          val random = UUID.randomUUID().toString()

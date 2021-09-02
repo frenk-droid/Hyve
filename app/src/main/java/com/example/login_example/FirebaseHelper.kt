@@ -24,15 +24,18 @@ class FirebaseHelper {
         var list= mutableListOf<String>()
         val posts_finale= mutableListOf<Post>()
 
-        for(t in Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").getSnapshotValue().children){ // scarico id dei topic
+        for(t in Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").getSnapshotValue().children) // scarico id dei topic
             list.add(t.getValue<String>()!!)
-        }
+        System.out.println(list)
+
         for(t in list)
-            for(i in Firebase.database.reference.child("topics").child(t).child("posts_ids").getSnapshotValue().children){
+            for(i in Firebase.database.reference.child("topics").child(t).child("posts_ids").getSnapshotValue().children)
                 posts.add(i.getValue<String>()!!)
-            }
+        System.out.println(posts)
+
         for(t in posts)
             posts_finale.add(Firebase.database.reference.child("posts").child(t).getSnapshotValue().getValue<Post>()!!)
+        System.out.println(posts_finale)
         return posts_finale
     }
 
@@ -44,7 +47,40 @@ class FirebaseHelper {
         return list
     }
 
+    suspend fun getTopicName():MutableList<String>{
+        val names= mutableListOf<String>()
+        val list= getTopic()
+
+        for(t in list)
+            names.add(t.nome)
+        return names
+    }
+
+    suspend fun getTopic(User: user):MutableList<String>{
+        var list= mutableListOf<String>()
+
+        for(i in Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").getSnapshotValue().children)
+            list.add(i.getValue<String>()!!)
+        System.out.println("list topic_ids ${list}")
+        return list
+    }
+
+
+    suspend fun getTopicHistory(User: user):MutableList<String>{  // questa deve essere la post history non la topic history
+        var list= getTopic(User)
+        val list_finale= mutableListOf<String>()
+
+        for(t in list){
+            for(i in Firebase.database.reference.child("topics").getSnapshotValue().children)
+                if(i.getValue<Topic>()!!.id==t)
+                    list_finale.add(i.getValue<Topic>()!!.id)
+        }
+        System.out.println("list_finale= ${list_finale}")
+        return list_finale
+    }
+
     suspend fun addTopic(User : user, topic: Topic){
+        Firebase.database.reference.database.getReference("topics").child(topic.id).setValue(topic)
         var utente= Firebase.database.reference.child("users").child(User.user_id!!).getSnapshotValue().getValue<user>()!!
         var duplicate= false
         for(t in utente.topic_ids)
@@ -55,15 +91,28 @@ class FirebaseHelper {
         Firebase.database.reference.database.getReference("users").child(User.user_id!!).setValue(utente)
     }
 
+    suspend fun deleteTopic(User: user, topic: Topic){
+        System.out.println("Funzione chiamata!")
+        System.out.println("Valore topic id= ${topic.id}")
+        System.out.println("Valore user id= ${User.user_id!!}")
+        var list= getTopicHistory(User)
+        var list_finale= mutableListOf<String>()
+        for(t in list)
+            if(t != topic.id)
+                list_finale.add(t)
+
+        Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").setValue(list_finale)
+
+    }
+
+
     suspend fun addPost(post: Post, topic: String){
         var posts=mutableListOf<String>()
-        var list= mutableListOf<String>()
-         var topic_id:Topic?=null
+        var topic_id:Topic?=null
         Firebase.database.reference.database.getReference("posts").child(post.id).setValue(post)
         for(t in Firebase.database.reference.child("topics").getSnapshotValue().children){
 
             if(t.getValue<Topic>()!!.nome == topic){
-                println("fiiiiiiiiiiind")
                 posts.addAll(t.getValue<Topic>()!!.posts_ids)
                 topic_id= t.getValue<Topic>()!!
 
@@ -71,10 +120,60 @@ class FirebaseHelper {
 
         }
         topic_id!!.posts_ids.add(post.id)
-        println(topic_id!!.posts_ids)
         Firebase.database.reference.database.getReference("topics").child(topic_id!!.id).setValue(topic_id)
 
     }
+
+    suspend fun getPostHistory(User: user):MutableList<Post>{  // questa deve essere la post history non la topic history
+        var list= getTopic(User)
+        val list_topic= mutableListOf<Topic>()
+        var list_post= mutableListOf<String>()
+        val list_finale= mutableListOf<Post>()
+
+
+        for(j in list)
+            for(l in Firebase.database.reference.child("topics").child(j).child("posts_ids").getSnapshotValue().children)
+                list_post.add(l.getValue<String>()!!)
+        System.out.println("List_post values= ${list_post}")
+        for(z in list_post)
+            list_finale.add(Firebase.database.reference.child("posts").child(z).getSnapshotValue().getValue<Post>()!!)
+        System.out.println("list_finale= ${list_finale}")
+        return list_finale
+    }
+
+
+    suspend fun addComment(comment: Comment, post: Post){
+        val list= mutableListOf<String>()
+        for(i in Firebase.database.reference.child("posts").child(post.id).child("commenti_ids").getSnapshotValue().children)
+            list.add(i.getValue<String>()!!)
+        list.add(comment.id)
+        Firebase.database.reference.database.getReference("posts").child(post.id).child("commenti_ids").setValue(list)
+        Firebase.database.reference.database.getReference("comments").child(comment.id).setValue(comment)
+    }
+
+    suspend fun getComment(post: Post): MutableList<Comment>{
+        val list= mutableListOf<Comment>()
+        val final_list= mutableListOf<Comment>()
+        val ids= mutableListOf<String>()
+        for(i in Firebase.database.reference.child("posts").child(post.id).child("commenti_ids").getSnapshotValue().children)
+            ids.add(i.getValue<String>()!!)
+        System.out.println("ids= ${ids}")
+
+        System.out.println("lista= ${list}")
+
+        for(t in ids)
+            for(i in Firebase.database.reference.database.getReference("comments").getSnapshotValue().children) {
+                var commento= i.getValue<Comment>()!!
+                System.out.println("outside if${commento}")
+
+                if ( commento.id== t) {
+                    System.out.println("inside if${i.getValue<Comment>().toString()}")
+                    final_list.add(commento)
+                }
+            }
+        return final_list
+    }
+
 
     suspend fun getImage(reference:String):Bitmap{
         var bmp: Bitmap?=null

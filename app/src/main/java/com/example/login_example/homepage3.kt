@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,12 +41,14 @@ class homepage3 : Fragment(R.layout.fragment_homepage3) {
         super.onActivityCreated(savedInstanceState)
         if(fragmentContext is MainActivity2)
             User = (fragmentContext as MainActivity2).get()
+        usertext.text= User.username
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
 
                 img.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/profile_images/${User.image_profile}"))
-                val topic= FirebaseHelper().getTopic()
-                recyclerView.adapter = ContactAdapter(fragmentContext, topic, User)
+                val post= FirebaseHelper().getPostHistory(User)
+                System.out.println("topic= ${topic}")
+                recyclerView.adapter = ContactAdapter5(fragmentContext, post)
                 recyclerView.layoutManager = LinearLayoutManager(fragmentContext)
             }
         }

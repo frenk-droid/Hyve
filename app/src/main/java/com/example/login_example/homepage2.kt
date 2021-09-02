@@ -1,9 +1,11 @@
 package com.example.login_example
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +24,13 @@ class homepage2 : Fragment(R.layout.prova_download) {
     lateinit var img: ImageView
     lateinit var recyclerView:RecyclerView
     lateinit var User: user
+    lateinit var newTopic: Button
     var bmp:Bitmap?=null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         img = view.findViewById<View>(R.id.imageView5) as ImageView
         recyclerView = view.findViewById<View>(R.id.recyclerView) as RecyclerView
+        newTopic= view.findViewById<View>(R.id.button10) as Button
 
     }
     override fun onAttach(context: Context) {
@@ -45,6 +49,12 @@ class homepage2 : Fragment(R.layout.prova_download) {
                 recyclerView.adapter = ContactAdapter(fragmentContext, topic, User)
                 recyclerView.layoutManager = LinearLayoutManager(fragmentContext)
             }
+        }
+
+        newTopic.setOnClickListener {
+            val intent = Intent(activity, NewTopic::class.java)
+            intent.putExtra("user-data", User)
+            startActivity(intent)
         }
     }
 

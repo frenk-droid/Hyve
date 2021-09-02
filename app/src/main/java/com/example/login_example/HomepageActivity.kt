@@ -5,14 +5,9 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -20,7 +15,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.prova_download.*
 
 

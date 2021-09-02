@@ -5,11 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -18,15 +14,14 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_post.*
-import kotlinx.android.synthetic.main.item_contact.view.*
-import kotlinx.android.synthetic.main.prova_download.*
-import java.lang.reflect.Array
 
 class PostActivity : AppCompatActivity() {
 
     private lateinit var topic: Topic
     val context = this
     val posts_finale= mutableListOf<Post>()
+
+//todo aggiungere direttamente post senza fare il refresh ? riga 57 e seguito
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +41,11 @@ class PostActivity : AppCompatActivity() {
         postListCreate(topic.posts_ids, this)
     }
 
-    fun addTopic(v: View?) {
+   /* fun addTopic(v: View?) {
         val intent = Intent(this, NewPost::class.java)
         intent.putExtra("topic-data", topic)
         startActivityForResult(intent, 2)
-    }
+    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -62,8 +57,8 @@ class PostActivity : AppCompatActivity() {
                 val text = data.getStringExtra("text")
                /// posts_finale.add(Post(id!!, nome!!, img!!, text!!, mutableListOf("")))
 
-                r.adapter = ContactAdapter2(context!!, posts_finale)
-                r.layoutManager = LinearLayoutManager(context)
+               // r.adapter = ContactAdapter2(context!!, posts_finale)
+               // r.layoutManager = LinearLayoutManager(context)
 
             }
         }
@@ -76,7 +71,7 @@ class PostActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                var posts= mutableListOf<Post>()
+                val posts= mutableListOf<Post>()
                 for (data in snapshot.getChildren())
                     posts.add(data.getValue<Post>()!!)
                 Log.d("post", posts.toString())
@@ -84,8 +79,8 @@ class PostActivity : AppCompatActivity() {
                 for(post in posts)
                     if(ids.contains(post.id))
                         posts_finale.add(post)
-                r.adapter = ContactAdapter2(context, posts_finale) //se posts_finale è null c'è un problema
-                r.layoutManager = LinearLayoutManager(context)
+               // r.adapter = ContactAdapter2(context, posts_finale) //se posts_finale è null c'è un problema
+               // r.layoutManager = LinearLayoutManager(context)
             }
         })
     }

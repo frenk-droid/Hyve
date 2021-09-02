@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.login_example.*
-import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
@@ -22,13 +20,13 @@ class HomepageFragment : Fragment(R.layout.activity_post) {
     lateinit var recyclerView:RecyclerView
     lateinit var img: ImageView
     lateinit var User: user
-    lateinit var newTopic: Button
+    lateinit var newPost: Button
     var bmp: Bitmap?=null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         img = view.findViewById<View>(R.id.imageView4) as ImageView
         recyclerView = view.findViewById<View>(R.id.r) as RecyclerView
-        newTopic= view.findViewById<View>(R.id.button6) as Button
+        newPost= view.findViewById<View>(R.id.button6) as Button
     }
 
     override fun onAttach(context: Context) {
@@ -49,12 +47,14 @@ class HomepageFragment : Fragment(R.layout.activity_post) {
         CoroutineScope(IO).launch {
             withContext(Dispatchers.Main) {
                 img.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/profile_images/${User.image_profile}"))
+
                 val posts= FirebaseHelper().getPost(User)
-                recyclerView.adapter = ContactAdapter2(fragmentContext, posts)
+                System.out.println(posts)
+                recyclerView.adapter = ContactAdapter2(fragmentContext, posts, User)
                 recyclerView.layoutManager = LinearLayoutManager(fragmentContext)
             }
         }
-        newTopic.setOnClickListener {
+        newPost.setOnClickListener {
             val intent = Intent(activity, NewPost::class.java)
             intent.putExtra("user-data", User)
             startActivity(intent)

@@ -17,19 +17,20 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="16dp"
-        android:text="Name"
+        android:layout_marginBottom="16dp"
+        android:text="@string/name"
         android:textColor="@color/white_100" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName4"
+
+
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/roundedittext"
-        android:ems="10"
-        android:inputType="textPersonName"
         android:padding="16dp"
-        android:text="Topic"
-        android:textColor="@color/white_100" />
+        android:layout_marginBottom="16dp"
+        tools:ignore="MissingConstraints"
+        />
 
     <EditText
         android:id="@+id/editTextTextPersonName5"
@@ -38,8 +39,9 @@
         android:background="@drawable/roundedittext"
         android:ems="10"
         android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-        android:text="Comment"
+        android:text="@string/comment"
         android:textColor="@color/white_100" />
 
     <ImageButton
@@ -48,6 +50,7 @@
         android:layout_height="387dp"
         android:layout_gravity="center"
         android:onClick="uploadImage"
+        android:layout_marginBottom="16dp"
         tools:src="@tools:sample/avatars" />
 
     <Button

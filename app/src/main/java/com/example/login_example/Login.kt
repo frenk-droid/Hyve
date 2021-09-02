@@ -3,12 +3,8 @@ package com.example.login_example
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,11 +13,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-
-import kotlinx.coroutines.withContext
 
 //inserire sottolineature rosse per identificare se email o password è errata
 //controllare eventuali bug
@@ -49,19 +40,18 @@ class Login : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        var intent = Intent( this, MainActivity2::class.java)
+                        val intent = Intent( this, MainActivity2::class.java)
                         loadhomePage(intent, uid)
                     }
                     else
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
-      // loadhomePage(intent, uid)
        }
 
     private fun loadhomePage(intent :Intent, uid: String) {  //download all the user data from firebase and pass them to HomepageActivity
 
         lateinit var User :user
-
+        //todo togliere la chiamata a firebase in questo punto del codice e mettere tutto in firebaseHelper
         Firebase.database.reference.child("users").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 User = dataSnapshot.getValue<user>()!!
