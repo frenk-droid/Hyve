@@ -19,23 +19,23 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class FirebaseHelper {
-    suspend fun getPost(User:user): MutableList<Post>{
-        var posts=mutableListOf<String>()
-        var list= mutableListOf<String>()
+    suspend fun getPost(user:User): MutableList<Post>{
+        val posts=mutableListOf<String>()
+        val list= mutableListOf<String>()
         val posts_finale= mutableListOf<Post>()
 
-        for(t in Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").getSnapshotValue().children) // scarico id dei topic
+        for(t in Firebase.database.reference.child("users").child(user.user_id!!).child("topic_ids").getSnapshotValue().children) // scarico id dei topic
             list.add(t.getValue<String>()!!)
-        System.out.println(list)
+        //System.out.println(list)
 
         for(t in list)
             for(i in Firebase.database.reference.child("topics").child(t).child("posts_ids").getSnapshotValue().children)
                 posts.add(i.getValue<String>()!!)
-        System.out.println(posts)
+        //System.out.println(posts)
 
         for(t in posts)
             posts_finale.add(Firebase.database.reference.child("posts").child(t).getSnapshotValue().getValue<Post>()!!)
-        System.out.println(posts_finale)
+        //System.out.println(posts_finale)
         return posts_finale
     }
 
@@ -56,18 +56,27 @@ class FirebaseHelper {
         return names
     }
 
-    suspend fun getTopic(User: user):MutableList<String>{
+    suspend fun getTopic(user: User):MutableList<String>{
         var list= mutableListOf<String>()
 
-        for(i in Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").getSnapshotValue().children)
+        for(i in Firebase.database.reference.child("users").child(user.user_id!!).child("topic_ids").getSnapshotValue().children)
             list.add(i.getValue<String>()!!)
-        System.out.println("list topic_ids ${list}")
+        //System.out.println("list topic_ids ${list}")
+        return list
+    }
+
+    suspend fun getPost():MutableList<Post>{
+        var list= mutableListOf<Post>()
+
+        for(i in Firebase.database.reference.child("posts").getSnapshotValue().children)
+            list.add(i.getValue<Post>()!!)
+        //System.out.println("list posts_ids ${list}")
         return list
     }
 
 
-    suspend fun getTopicHistory(User: user):MutableList<String>{  // questa deve essere la post history non la topic history
-        var list= getTopic(User)
+    suspend fun getTopicHistory(user: User):MutableList<String>{
+        var list= getTopic(user)
         val list_finale= mutableListOf<String>()
 
         for(t in list){
@@ -75,33 +84,38 @@ class FirebaseHelper {
                 if(i.getValue<Topic>()!!.id==t)
                     list_finale.add(i.getValue<Topic>()!!.id)
         }
-        System.out.println("list_finale= ${list_finale}")
+        //System.out.println("list_finale= ${list_finale}")
         return list_finale
     }
 
-    suspend fun addTopic(User : user, topic: Topic){
+    suspend fun getUtente(uid : String) : User{
+        val utente= Firebase.database.reference.child("users").child(uid).getSnapshotValue().getValue<User>()!!
+        return utente
+    }
+
+    suspend fun addTopic(user : User, topic: Topic){
         Firebase.database.reference.database.getReference("topics").child(topic.id).setValue(topic)
-        var utente= Firebase.database.reference.child("users").child(User.user_id!!).getSnapshotValue().getValue<user>()!!
+        var utente= Firebase.database.reference.child("users").child(user.user_id!!).getSnapshotValue().getValue<User>()!!
         var duplicate= false
         for(t in utente.topic_ids)
             if(topic.equals(t))
                 duplicate=true
         if(duplicate.equals(false))
             utente.topic_ids.add(topic.id)
-        Firebase.database.reference.database.getReference("users").child(User.user_id!!).setValue(utente)
+        Firebase.database.reference.database.getReference("users").child(user.user_id!!).setValue(utente)
     }
 
-    suspend fun deleteTopic(User: user, topic: Topic){
-        System.out.println("Funzione chiamata!")
-        System.out.println("Valore topic id= ${topic.id}")
-        System.out.println("Valore user id= ${User.user_id!!}")
-        var list= getTopicHistory(User)
+    suspend fun deleteTopic(user: User, topic: Topic){
+        //System.out.println("Funzione chiamata!")
+        //System.out.println("Valore topic id= ${topic.id}")
+        //System.out.println("Valore User id= ${user.user_id!!}")
+        var list= getTopicHistory(user)
         var list_finale= mutableListOf<String>()
         for(t in list)
             if(t != topic.id)
                 list_finale.add(t)
 
-        Firebase.database.reference.child("users").child(User.user_id!!).child("topic_ids").setValue(list_finale)
+        Firebase.database.reference.child("users").child(user.user_id!!).child("topic_ids").setValue(list_finale)
 
     }
 
@@ -124,20 +138,14 @@ class FirebaseHelper {
 
     }
 
-    suspend fun getPostHistory(User: user):MutableList<Post>{  // questa deve essere la post history non la topic history
-        var list= getTopic(User)
-        val list_topic= mutableListOf<Topic>()
-        var list_post= mutableListOf<String>()
+    suspend fun getPostHistory(user: User):MutableList<Post>{
+        var list_post= getPost()
         val list_finale= mutableListOf<Post>()
 
-
-        for(j in list)
-            for(l in Firebase.database.reference.child("topics").child(j).child("posts_ids").getSnapshotValue().children)
-                list_post.add(l.getValue<String>()!!)
-        System.out.println("List_post values= ${list_post}")
-        for(z in list_post)
-            list_finale.add(Firebase.database.reference.child("posts").child(z).getSnapshotValue().getValue<Post>()!!)
-        System.out.println("list_finale= ${list_finale}")
+        for(post in list_post)
+            if (post.username.equals(user.username))
+                list_finale.add(post)
+        //System.out.println("list_finale history posts= ${list_finale}")
         return list_finale
     }
 
@@ -157,17 +165,17 @@ class FirebaseHelper {
         val ids= mutableListOf<String>()
         for(i in Firebase.database.reference.child("posts").child(post.id).child("commenti_ids").getSnapshotValue().children)
             ids.add(i.getValue<String>()!!)
-        System.out.println("ids= ${ids}")
+        //System.out.println("ids= ${ids}")
 
-        System.out.println("lista= ${list}")
+        //System.out.println("lista= ${list}")
 
         for(t in ids)
             for(i in Firebase.database.reference.database.getReference("comments").getSnapshotValue().children) {
                 var commento= i.getValue<Comment>()!!
-                System.out.println("outside if${commento}")
+                //System.out.println("outside if${commento}")
 
                 if ( commento.id== t) {
-                    System.out.println("inside if${i.getValue<Comment>().toString()}")
+                    //System.out.println("inside if${i.getValue<Comment>().toString()}")
                     final_list.add(commento)
                 }
             }

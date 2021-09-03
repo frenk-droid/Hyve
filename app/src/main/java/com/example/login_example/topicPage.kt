@@ -17,15 +17,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class homepage2 : Fragment(R.layout.prova_download) {
-    private var firebase= Firebase.database.reference
+class topicPage : Fragment(R.layout.prova_download) {
+
     val topic = mutableListOf<Topic>()
+    var bmp:Bitmap?=null
     lateinit var fragmentContext: Context
     lateinit var img: ImageView
     lateinit var recyclerView:RecyclerView
-    lateinit var User: user
+    lateinit var User: User
     lateinit var newTopic: Button
-    var bmp:Bitmap?=null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         img = view.findViewById<View>(R.id.imageView5) as ImageView
@@ -40,8 +41,8 @@ class homepage2 : Fragment(R.layout.prova_download) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(fragmentContext is MainActivity2)
-            User = (fragmentContext as MainActivity2).get()
+        if(fragmentContext is BaseActivity)
+            User = (fragmentContext as BaseActivity).get()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 img.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/profile_images/${User.image_profile}"))

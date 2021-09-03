@@ -21,14 +21,14 @@ import java.util.*
 
 class NewTopic : AppCompatActivity() {
     private lateinit var random: String
-    private lateinit var User: user
+    private lateinit var user: User
     private  var uri : Uri?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_topic)
-        User = intent.getSerializableExtra("user-data") as user
+        user = intent.getSerializableExtra("user-data") as User
     }
 
     fun uploadTopic(v:View?){
@@ -67,11 +67,11 @@ class NewTopic : AppCompatActivity() {
                 Log.d("no", "Failed to upload image to storage")
             }
         Tasks.whenAll(task).addOnCompleteListener(OnCompleteListener { task: Task<Void?> ->
-            val topic = Topic(topic_id, nameTopic, random, textTopic, mutableListOf(""))
+            val topic = Topic(topic_id, nameTopic, random, textTopic, mutableListOf())
             val returnIntent = Intent()
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
-                    FirebaseHelper().addTopic(User, topic)
+                    FirebaseHelper().addTopic(user, topic)
                 }
             }
             returnIntent.putExtra("topic-data", topic)

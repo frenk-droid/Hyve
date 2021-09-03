@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ContactAdapter(private val context: Context, private val topics : List<Topic>, private val User:user) : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+class ContactAdapter(private val context: Context, private val topics : List<Topic>, private val user:User) : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     private var isPresent = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,7 +25,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
         holder.bind(topic)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
-                val list = FirebaseHelper().getTopic(User)
+                val list = FirebaseHelper().getTopic(user)
                 isPresent = list.contains(topic.id)
                 System.out.println("isPresent value in onBind ${isPresent}")
             }
@@ -39,7 +39,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     itemView.imageView8.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/topic_images/${topic.image_path}"))
-                    val list = FirebaseHelper().getTopic(User)
+                    val list = FirebaseHelper().getTopic(user)
                     if (list.contains(topic.id)) {
                         itemView.button.visibility = View.INVISIBLE
                         itemView.button2.visibility = View.VISIBLE
@@ -51,7 +51,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
                 itemView.button.setOnClickListener {
                     CoroutineScope(Dispatchers.IO).launch {
                         withContext(Dispatchers.Main) {
-                            FirebaseHelper().addTopic(User, topic)
+                            FirebaseHelper().addTopic(user, topic)
                         }
                     }
                     itemView.button.visibility = View.INVISIBLE
@@ -61,7 +61,7 @@ class ContactAdapter(private val context: Context, private val topics : List<Top
                 itemView.button2.setOnClickListener {
                     CoroutineScope(Dispatchers.IO).launch {
                         withContext(Dispatchers.Main) {
-                            FirebaseHelper().deleteTopic(User, topic)
+                            FirebaseHelper().deleteTopic(user, topic)
                         }
                     }
                     itemView.button.visibility = View.VISIBLE

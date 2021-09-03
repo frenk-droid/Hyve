@@ -1,18 +1,16 @@
 package com.example.login_example
 
-import HomepageFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_homepage.*
+import postPage
 
 
-
-class MainActivity2 : AppCompatActivity() {
-   var User:user?= null
+class BaseActivity : AppCompatActivity() {
+   var user:User?= null
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -23,30 +21,21 @@ class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage)
-        User = intent.getSerializableExtra("USER_DATA") as user
-        Log.d("User", User!!.image_profile)
-        val firstFragment= homepage2()
-        val secondFragment=HomepageFragment()
-        val thirdFragment=homepage3()
-
-
-
-
+        val firstFragment=postPage()
+        val secondFragment=topicPage()
+        val thirdFragment=profilePage()
+        user = intent.getSerializableExtra("USER_DATA") as User
 
         setCurrentFragment(firstFragment)
-
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.home->setCurrentFragment(secondFragment)
-                R.id.topic->setCurrentFragment(firstFragment)
+                R.id.home->setCurrentFragment(firstFragment)
+                R.id.topic->setCurrentFragment(secondFragment)
                 R.id.profile->setCurrentFragment(thirdFragment)
 
             }
             true
         }
-
-
-
     }
 
     private fun setCurrentFragment(fragment: Fragment)=
@@ -56,8 +45,8 @@ class MainActivity2 : AppCompatActivity() {
         }
 
 
-    fun get():user{
-        return User!!
+    fun get():User{
+        return user!!
     }
 
 }

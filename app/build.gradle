@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'com.google.gms.google-services'
 
+
 }
 
 
@@ -35,6 +36,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -42,6 +46,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+    implementation 'com.google.firebase:firebase-database:19.7.0'
+
     //Navigation
     def nav_version = "2.3.5"
     // Kotlin

@@ -25,11 +25,9 @@ import java.util.*
 
 
  class RegisterPage : AppCompatActivity() {
-     private var auth= Firebase.auth
-     val topic = mutableListOf<Topic>()
-
      var uri: Uri? = null
-     var ready=false
+     var auth= Firebase.auth
+     val topic = mutableListOf<Topic>()
 
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
@@ -40,20 +38,20 @@ import java.util.*
          val username = UsernameField.text.toString()
          val password = passField.text.toString()
          val email = emailField.text.toString()
-          var random: String?=null
+         var random: String?=null
          if(validateCredentials(username,password,email)) {
              auth.createUserWithEmailAndPassword(email, password)
-                     .addOnCompleteListener(this) { task ->
+                     .addOnCompleteListener(this) {
                          CoroutineScope(Dispatchers.IO).launch {
                              withContext(Dispatchers.Main) {
                                  if (uri != null)
                                      random= uploadImageToFirebaseStorage()
                                  val user_uid = auth.currentUser!!.uid
-                                 val utente: user
+                                 val utente: User
                                  if (random != null)
-                                     utente = user(user_uid, username, password, email, random!!)
+                                     utente = User(user_uid, username, password, email, random!!)
                                  else
-                                     utente = user(user_uid, username, password, email)
+                                     utente = User(user_uid, username, password, email)
                                  FirebaseDatabase.getInstance().getReference("users").child(user_uid).setValue(utente)
                                  loadLoginPage()
                              }
@@ -81,9 +79,8 @@ import java.util.*
              imageButton.setImageURI(uri)
          }
      }
-    //todo spostare funzione su firebasehelper e controllare che non sia già presente
-     suspend fun uploadImageToFirebaseStorage():String {
 
+     suspend fun uploadImageToFirebaseStorage():String {
          val random = UUID.randomUUID().toString()
          val filename = "profile_images/${random}"
          val ref = FirebaseStorage.getInstance().getReference(filename)
@@ -100,6 +97,8 @@ import java.util.*
                  .await()
             return random
      }
+
+
 
      private fun loadLoginPage(){
          val intent = Intent(this, Login::class.java)

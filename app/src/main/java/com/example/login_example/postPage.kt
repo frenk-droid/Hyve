@@ -15,11 +15,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomepageFragment : Fragment(R.layout.activity_post) {
+class postPage : Fragment(R.layout.activity_post) {
     lateinit var fragmentContext: Context
     lateinit var recyclerView:RecyclerView
     lateinit var img: ImageView
-    lateinit var User: user
+    lateinit var User: User
     lateinit var newPost: Button
     var bmp: Bitmap?=null
 
@@ -42,8 +42,8 @@ class HomepageFragment : Fragment(R.layout.activity_post) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(fragmentContext is MainActivity2)
-            User = (fragmentContext as MainActivity2).get()
+        if(fragmentContext is BaseActivity)
+            User = (fragmentContext as BaseActivity).get()
         CoroutineScope(IO).launch {
             withContext(Dispatchers.Main) {
                 img.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/profile_images/${User.image_profile}"))

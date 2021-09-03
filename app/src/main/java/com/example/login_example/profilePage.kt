@@ -16,13 +16,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class homepage3 : Fragment(R.layout.fragment_homepage3) {
+class profilePage : Fragment(R.layout.fragment_homepage3) {
     private var firebase= Firebase.database.reference
     val topic = mutableListOf<Topic>()
     lateinit var fragmentContext: Context
     lateinit var img: ImageView
     lateinit var recyclerView: RecyclerView
-    lateinit var User: user
+    lateinit var User: User
     lateinit var usertext: TextView
     var bmp: Bitmap?=null
 
@@ -39,15 +39,15 @@ class homepage3 : Fragment(R.layout.fragment_homepage3) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(fragmentContext is MainActivity2)
-            User = (fragmentContext as MainActivity2).get()
+        if(fragmentContext is BaseActivity)
+            User = (fragmentContext as BaseActivity).get()
         usertext.text= User.username
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
 
                 img.setImageBitmap(FirebaseHelper().getImage("gs://hyve-d0e7b.appspot.com/profile_images/${User.image_profile}"))
                 val post= FirebaseHelper().getPostHistory(User)
-                System.out.println("topic= ${topic}")
+                //System.out.println("topic= ${topic}")
                 recyclerView.adapter = ContactAdapter5(fragmentContext, post)
                 recyclerView.layoutManager = LinearLayoutManager(fragmentContext)
             }

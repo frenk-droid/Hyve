@@ -2,13 +2,13 @@ package com.example.login_example
 
 import java.io.Serializable
 
-class user : Serializable {
+class User : Serializable {
 
     var username= ""
     var password=""
     var email= ""
     var user_id: String? = ""
-    val topic_ids: MutableList<String> = mutableListOf()
+    val topic_ids= mutableListOf<String>()
     var image_profile= "default.png"
 
     constructor(){}

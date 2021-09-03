@@ -25,27 +25,28 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class NewPost : AppCompatActivity(), AdapterView.OnItemSelectedListener  {
-    private lateinit var task: StorageTask<UploadTask.TaskSnapshot>
+
+    //private lateinit var task: StorageTask<UploadTask.TaskSnapshot>
     private lateinit var random: String;
-    private lateinit var topicc: Topic
-    private lateinit var User:user
+    private lateinit var user:User
     var uri: Uri? = null
     private lateinit var spinner: Spinner
     var context=this
     private lateinit var topics: MutableList<String>
     private lateinit var topicPost: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_post)
-         User = intent.getSerializableExtra("user-data") as user
+         user = intent.getSerializableExtra("user-data") as User
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 topics = FirebaseHelper().getTopicName()
                 spinner= findViewById<Spinner>(R.id.spinner)
-                spinner.setOnItemSelectedListener(context)
+                spinner.onItemSelectedListener = context
                 val aa = ArrayAdapter(context, R.layout.spinner, topics)
                 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.setAdapter(aa)
+                spinner.adapter = aa
             }
         }
     }
@@ -72,7 +73,7 @@ class NewPost : AppCompatActivity(), AdapterView.OnItemSelectedListener  {
 
             val post_id = UUID.randomUUID().toString()
 
-            val post = Post(post_id, namePost, random, commentPost, mutableListOf(), User.username, User.image_profile)
+            val post = Post(post_id, namePost, random, commentPost, mutableListOf(), user.username, user.image_profile)
             val helper = FirebaseHelper()
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
